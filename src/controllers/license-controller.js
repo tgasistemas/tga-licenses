@@ -66,8 +66,8 @@ exports.getLicense = async(req, res, next) => {
                                 let buffers = [];
                                 lic.validade = (result[i].VALIDADE);
                                 lic.quantidade = (result[i].QUANTIDADE);
-                                lic.ativo = (result[i].QUANTIDADE);
-                                lic.bloqueado = (result[i].BLOQVENDA);
+                                lic.ativo = conexao.convertBuffer(result[i].ATIVO);
+                                lic.bloqueado = conexao.convertBuffer(result[i].BLOQVENDA);
                                 
                                 licenses.push(lic);
                             }
