@@ -3,7 +3,7 @@ require('dotenv/config');
 exports.options = {
     host: process.env.HOST,
     port: process.env.PORTFB,
-    database: process.env.DATABASE, //"C:/TGA/Dados/TGA.FDB",
+    database: process.env.DATABASE, //"C:/TGA/Dados/TGA.FDB", C:\\TGA\\Dados\\CONTROLE\\NODE.FDB
     user: process.env.USER,
     password: process.env.PASS,
     lowercase_keys: false, // set to true to lowercase keys
