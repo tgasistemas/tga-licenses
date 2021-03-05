@@ -42,8 +42,9 @@ exports.getLicense = async(req, res, next) => {
 
         // console.log('cnpj descriptografado:'+cnpjdecripted);
 
-        console.log(req.body.login);
-        console.log(req.body.senha);
+        // console.log(req.body.login);
+        // console.log(req.body.senha);
+        
         var licenses = [];
         var pool = firebird.pool(5, conexao.options);
         pool.get(function(err, db) {
