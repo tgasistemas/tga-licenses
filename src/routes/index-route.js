@@ -2,10 +2,11 @@
 
 const express = require('express');
 const router = express.Router();
+const authService = require('../services/auth-service');
 
-router.get('/', (req, res, next) => {
+router.get('/', authService.authorize, (req, res, next) => {
     res.status(200).send({
-        title: "Linceças TGA Mobile",
+        title: "Licenças TGA Mobile",
         content: "TGA MOBILE"
     });
 });
