@@ -49,7 +49,7 @@ exports.getLicense = async(req, res, next) => {
         pool.get(function(err, db) {
             if (err) {return res.status(400).send({error:"Ocorreu um erro ao tentar fazer a conexao. Erro : " +err.toString()});}
             try {db.query(
-                "SELECT QUANTIDADE, VALIDADE, ATIVO, BLOQVENDA FROM NODE_FCFO( ?,? ) ",
+                "SELECT QUANTIDADE, VALIDADE, ATIVO, BLOQVENDA FROM NODE_FCFO2( ?,? ) ",
                 // "SELECT  F.VALORULTIMOLAN AS VALIDADE "+
                 // "FROM FCFO F "+
                 // "LEFT JOIN FCFOCOMPL FC ON F.CODCFO = FC.CODCFO "+
