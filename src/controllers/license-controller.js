@@ -44,7 +44,7 @@ exports.getLicense = async(req, res, next) => {
 
         // console.log(req.body.login);
         // console.log(req.body.senha);
-        
+
         var licenses = [];
         var pool = firebird.pool(5, conexao.options);
         pool.get(function(err, db) {
@@ -59,21 +59,32 @@ exports.getLicense = async(req, res, next) => {
                 [req.body.login, req.body.senha], function(err, result){ //req.body.cnpj
                     try {
                         if (err) {return res.status(400).send({error:"Ocorreu um erro ao tentar fazer a consulta. Erro : " +err.toString()});}    
-                        if (result != undefined) {
+                        if (result[0].ATIVO != null) {
                             console.log('Numero de Linhas: '+result.length);
+                            
                             for(var i=0; i<result.length; i++){
                                 var lic = new License();
-                                let buffers = [];
-                                lic.validade = (result[i].VALIDADE);
-                                lic.quantidade = (result[i].QUANTIDADE);
-                                lic.ativo = conexao.convertBuffer(result[i].ATIVO);
-                                lic.bloqueado = conexao.convertBuffer(result[i].BLOQVENDA);
+                                if(result[i].QUANTIDADE == 0 || result[i].QUANTIDADE == null)
+                                    lic.error = 'Nenhuma licença do TGA Mobile disponível. Por favor, entre em contato com a TGA Sistemas através do telefone (65) 3339-0800!';
+                                else if(conexao.convertBuffer(result[i].ATIVO) != 'T' || conexao.convertBuffer(result[i].BLOQVENDA) == 'T')
+                                    lic.error = 'Não foi possivel liberar a licença. Por favor, entre em contato com a TGA Sistemas através do telefone (65) 3339-0800!';
                                 
+                                if(lic.error == null){
+                                    let buffers = [];
+                                    lic.validade = (result[i].VALIDADE);
+                                    lic.quantidade = (result[i].QUANTIDADE);
+                                    lic.ativo = conexao.convertBuffer(result[i].ATIVO);
+                                    lic.bloqueado = conexao.convertBuffer(result[i].BLOQVENDA);
+                                }
                                 licenses.push(lic);
                             }
+
                             return res.send(JSON.stringify(licenses));
                         } else {
-                            res.status(400).send({ error: "Não existem dados para ser retornados" });
+                            var lic = new License();
+                            lic.error = 'Cliente não encontrado';
+                            licenses.push(lic);
+                            res.status(400).send(JSON.stringify(licenses));
                         }
                     } catch (e) {
                         console.log(e);
