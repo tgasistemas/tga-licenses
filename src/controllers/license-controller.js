@@ -9,8 +9,71 @@ const conexao = require('../connection/firebird');
 //var SHA256 = require("crypto-js/SHA256");
 const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
-const key = "419336459035a6d4f8d1a6964e8a0d75";// Buffer.from('419336459035a6d4f8d1a6964e8a0d75', 'hex');
-const iv = '6b84e425ee0875a3';// Buffer.from('6b84e425ee0875a3', 'hex');
+const key =  "3361221120183463";//"419336459035a6d4f8d1a6964e8a0d75";// Buffer.from('419336459035a6d4f8d1a6964e8a0d75', 'hex');
+// const iv = '6b84e425ee0875a3';// Buffer.from('6b84e425ee0875a3', 'hex');
+const iv = Buffer.alloc(16, 0); 
+
+// private ALGORITHM:crypto.CipherGCMTypes = 'aes-256-gcm';
+
+
+exports.getToken = async(req, res, next) => {
+    try {
+
+        function encrypt(text) {
+            let cipher = crypto.createCipheriv(crypto.CipherCCMTypes = 'aes-128-ecb', Buffer.from(key), null); //aes-256-cbc
+            let encrypted = cipher.update(text);
+            encrypted = Buffer.concat([encrypted, cipher.final()]);
+            return { iv: iv.toString(), encryptedData: encrypted.toString('hex') };
+        }
+        // console.log((key).toString());
+        // console.log((iv).toString());
+        function decrypt(text) {
+            // let iv1 = Buffer.from(iv);
+            let encryptedText = Buffer.from(text['encryptedData'], 'hex');
+            let decipher = crypto.createDecipheriv(crypto.CipherCCMTypes = 'aes-128-ecb', Buffer.from(key), null);
+            let decrypted = decipher.update(encryptedText);
+            decrypted = Buffer.concat([decrypted, decipher.final()]);
+            return decrypted.toString();
+        }
+           
+        //Obtem o id od usuario da requisicao e captura 4 digitos
+        var user = req.query.userid.substring(0,4);
+        // console.log('string user: '+user);
+
+        //Calcula a data de hoje mais 30 dias de liberação no formato (ddmmyyyy)
+        const dNow = new Date();
+        var dia = 25;
+        dNow.setDate(dNow.getDate() + dia);
+        var datavalidade = dNow.toISOString().substring(0,10);
+        var datavalidade = datavalidade.substr(8,2)+datavalidade.substr(5,2)+datavalidade.substr(0,4);
+        // console.log('data: '+datavalidade);
+        var infoToCrypt = datavalidade+' '+user;
+        // console.log('Criptografar: '+infoToCrypt);
+
+        //Procedimento para criptografar
+        var criptografia = encrypt(infoToCrypt);
+        // console.log('Token: '+criptografia['encryptedData']);
+
+        return res.send(JSON.stringify({token: criptografia['encryptedData']}));
+
+
+        // var hw = encrypt("15042021 LFXX");
+        // console.log(hw);
+        // console.log(decrypt(hw));
+
+        // console.log('cnpj criptografado: '+req.body.cnpj);
+        // var cnpjdecripted = decrypt(req.body.cnpj);
+
+        // console.log('cnpj descriptografado:'+cnpjdecripted);
+
+        // console.log(req.body.login);
+        // console.log(req.body.senha);
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send({ error: "Falha ao carregar os dados" });
+    }
+}
 
 exports.getLicense = async(req, res, next) => {
     try {
@@ -102,7 +165,6 @@ exports.getLicense = async(req, res, next) => {
         res.status(500).send({ error: "Falha ao carregar os dados do servidor" });
     }
 }
-
 
 exports.getLicense2 = async() => {
     try {
