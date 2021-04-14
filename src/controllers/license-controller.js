@@ -78,25 +78,25 @@ exports.getToken = async(req, res, next) => {
 exports.getLicense = async(req, res, next) => {
     try {
 
-        function encrypt(text) {
-            let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-            let encrypted = cipher.update(text);
-            encrypted = Buffer.concat([encrypted, cipher.final()]);
-            return { iv: iv.toString(), encryptedData: encrypted.toString('hex') };
-        }
-        console.log((key).toString());
-        console.log((iv).toString());
-        function decrypt(text) {
-            let iv1 = Buffer.from(iv);
-            let encryptedText = Buffer.from(text, 'hex');
-            let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv1);
-            let decrypted = decipher.update(encryptedText);
-            decrypted = Buffer.concat([decrypted, decipher.final()]);
-            return decrypted.toString();
-        }
+        // function encrypt(text) {
+        //     let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+        //     let encrypted = cipher.update(text);
+        //     encrypted = Buffer.concat([encrypted, cipher.final()]);
+        //     return { iv: iv.toString(), encryptedData: encrypted.toString('hex') };
+        // }
+        // console.log((key).toString());
+        // console.log((iv).toString());
+        // function decrypt(text) {
+        //     let iv1 = Buffer.from(iv);
+        //     let encryptedText = Buffer.from(text, 'hex');
+        //     let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv1);
+        //     let decrypted = decipher.update(encryptedText);
+        //     decrypted = Buffer.concat([decrypted, decipher.final()]);
+        //     return decrypted.toString();
+        // }
            
         
-        var hw = encrypt("teste");
+        // var hw = encrypt("teste");
         // console.log(hw);
         // console.log(decrypt(hw));
 
