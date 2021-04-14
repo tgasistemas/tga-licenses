@@ -113,13 +113,13 @@ exports.getLicense = async(req, res, next) => {
         pool.get(function(err, db) {
             if (err) {return res.status(400).send({error:"Ocorreu um erro ao tentar fazer a conexao. Erro : " +err.toString()});}
             try {db.query(
-                "SELECT QUANTIDADE, VALIDADE, ATIVO, BLOQVENDA FROM NODE_FCFO( ?,? ) ",
+                "SELECT QUANTIDADE, ATIVO, BLOQVENDA FROM NODE_FCFO( ?,?,? ) ",
                 // "SELECT  F.VALORULTIMOLAN AS VALIDADE "+
                 // "FROM FCFO F "+
                 // "LEFT JOIN FCFOCOMPL FC ON F.CODCFO = FC.CODCFO "+
                 // "WHERE   F.CODCFO = ? AND "+
                 // "        F.CAMPOALFA1 =  ? ",
-                [req.body.login, req.body.senha], function(err, result){ //req.body.cnpj
+                [req.body.login, req.body.senha, req.body.codcgc], function(err, result){ //req.body.cnpj
                     try {
                         if (err) {return res.status(400).send({error:"Ocorreu um erro ao tentar fazer a consulta. Erro : " +err.toString()});}    
                         if (result[0].ATIVO != null) {
@@ -134,7 +134,7 @@ exports.getLicense = async(req, res, next) => {
                                 
                                 if(lic.error == null){
                                     let buffers = [];
-                                    lic.validade = (result[i].VALIDADE);
+                                    //lic.validade = (result[i].VALIDADE);
                                     lic.quantidade = (result[i].QUANTIDADE);
                                     lic.ativo = conexao.convertBuffer(result[i].ATIVO);
                                     lic.bloqueado = conexao.convertBuffer(result[i].BLOQVENDA);
