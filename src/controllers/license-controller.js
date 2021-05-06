@@ -54,7 +54,7 @@ exports.getToken = async(req, res, next) => {
         var criptografia = encrypt(infoToCrypt);
         // console.log('Token: '+criptografia['encryptedData']);
 
-        return res.send(JSON.stringify({token: criptografia['encryptedData']}));
+        return res.send(JSON.stringify({token: criptografia['encryptedData'], validade: datavalidade}));
 
 
         // var hw = encrypt("15042021 LFXX");
